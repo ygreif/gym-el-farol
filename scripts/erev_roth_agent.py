@@ -35,11 +35,12 @@ class ErevRothAgent(object):
     def learn(self, reward):
         self.q[self.prev_action] += reward * self.config["learning_rate"]
         for key in self.q:
-            self.q[key] *= .9
+            self.q[key] *= .99
 
 def iterate(agents, env):
     actions = [a.act() for a in agents]
     obs, reward, _, _ = env.step(actions)
+    print actions, sum(actions)
     for agent, reward in zip(agents, reward):
         agent.learn(reward)
     return actions
@@ -47,7 +48,7 @@ def iterate(agents, env):
 def iterations_to_equilbira(agents, env):
     nash = FuzzyPureNash()
     for iter in range(0, 5000000):
-        if iter % 100 == 0 and iter > 0:
+        if iter % 50 == 0 and iter > 0:
             print iter
             if nash.in_equilibria():
                 return iter
@@ -57,8 +58,8 @@ def iterations_to_equilbira(agents, env):
     for agent in agents:
         print agent.q[0] / (agent.q[0] + agent.q[1])
     return False
-        
-n_agents = 20
+
+n_agents = 100
 env = ElFarolEnv(n_agents=n_agents, threshold=5)
 agents = []
 for i in range(0, n_agents):
