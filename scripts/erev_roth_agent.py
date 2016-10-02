@@ -40,7 +40,6 @@ class ErevRothAgent(object):
 def iterate(agents, env):
     actions = [a.act() for a in agents]
     obs, reward, _, _ = env.step(actions)
-    print actions, sum(actions)
     for agent, reward in zip(agents, reward):
         agent.learn(reward)
     return actions
