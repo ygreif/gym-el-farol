@@ -19,6 +19,7 @@ class ElFarolEnv(Env):
         self.g = g
         self.b = b
         self.prev_action = [self.action_space.sample() for _ in range(n_agents)]
+        self.iteration = 0
 
     def modify_threshold(self, change):
         self.threshold = int(self.threshold + self.threshold * change)
@@ -35,8 +36,9 @@ class ElFarolEnv(Env):
             return self.b
 
     def step(self, action):
+        self.iteration += 1
         n_attended = sum(action)
-        print(str(n_attended) + ", " + str(self.threshold))
+        print(str(self.iteration) + ", " + str(n_attended) + ", " + str(self.threshold))
         reward = [self.reward_func(a, n_attended) for a in action]
         self.prev_action = action
         return n_attended, reward, False, ()
